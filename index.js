@@ -11,9 +11,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ======================
 // MIDDLEWARE
-// ======================
 
 app.use(
   cors({
@@ -24,15 +22,11 @@ app.use(
 
 app.use(express.json());
 
-// ======================
 // MONGODB URI
-// ======================
 
 const uri = process.env.MONGODB_URI;
 
-// ======================
 // MONGODB CLIENT
-// ======================
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -42,9 +36,7 @@ const client = new MongoClient(uri, {
   },
 });
 
-// ======================
 // DATABASE CONNECTION
-// ======================
 
 async function run() {
   try {
@@ -106,9 +98,7 @@ async function run() {
       }
     });
 
-    // =====================================================
     // GET ALL USERS
-    // =====================================================
 
     app.get("/users", async (req, res) => {
       try {
@@ -128,9 +118,7 @@ async function run() {
       }
     });
 
-    // =====================================================
     // CHECK USER EXISTS
-    // =====================================================
 
     app.get("/users/email/:email", async (req, res) => {
       try {
@@ -153,9 +141,7 @@ async function run() {
       }
     });
 
-    // =====================================================
     // GET USER BY EMAIL
-    // =====================================================
 
     app.get("/users/:email", async (req, res) => {
       try {
@@ -174,9 +160,7 @@ async function run() {
       }
     });
 
-    // =====================================================
     // UPDATE USER ROLE
-    // =====================================================
 
     app.patch("/users/role/:id", async (req, res) => {
       try {
@@ -214,9 +198,7 @@ async function run() {
       }
     });
 
-    // =====================================================
     // DELETE USER
-    // =====================================================
 
     app.delete("/users/:id", async (req, res) => {
       try {
@@ -238,9 +220,7 @@ async function run() {
       }
     });
 
-    // =====================================================
     // UPDATE USER PROFILE
-    // =====================================================
 
     app.put("/users/:email", async (req, res) => {
       try {
@@ -273,9 +253,7 @@ async function run() {
       }
     });
 
-    // =====================================================
     // PING TEST
-    // =====================================================
 
     await client.db("admin").command({
       ping: 1,
@@ -289,17 +267,13 @@ async function run() {
 
 run();
 
-// ======================
 // ROOT ROUTE
-// ======================
 
 app.get("/", (req, res) => {
   res.send("🚀 LegalEase Server Running Successfully!");
 });
 
-// ======================
 // START SERVER
-// ======================
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
