@@ -239,6 +239,41 @@ async function run() {
     });
 
     // =====================================================
+    // UPDATE USER PROFILE
+    // =====================================================
+
+    app.put("/users/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const { name, image, phone, address, bio } = req.body;
+
+        const result = await usersCollection.updateOne(
+          { email },
+          {
+            $set: {
+              name,
+              image,
+              phone,
+              address,
+              bio,
+            },
+          },
+        );
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // =====================================================
     // PING TEST
     // =====================================================
 
