@@ -2,17 +2,38 @@ const dns = require("node:dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const express = require("express");
+const cors = require("cors");
 const dotenv = require("dotenv");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// MONGODB CONNECTION URI
-const uri =process.env.MONGODB_URI;
+// ======================
+// MIDDLEWARE
+// ======================
 
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  }),
+);
+
+app.use(express.json());
+
+// ======================
+// MONGODB URI
+// ======================
+
+const uri = process.env.MONGODB_URI;
+
+// ======================
 // MONGODB CLIENT
+// ======================
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -21,29 +42,230 @@ const client = new MongoClient(uri, {
   },
 });
 
+// ======================
 // DATABASE CONNECTION
+// ======================
+
 async function run() {
   try {
     await client.connect();
 
-    await client.db("admin").command({ ping: 1 });
+    console.log("✅ MongoDB Connected");
 
-    console.log(
-      "✅ Pinged your deployment. You successfully connected to MongoDB!",
-    );
-  } finally {
-    await client.close();
+    const db = client.db("legalease");
+
+    const usersCollection = db.collection("users");
+
+    // =====================================================
+    // CREATE USER
+    // =====================================================
+
+    app.post("/users", async (req, res) => {
+      try {
+        const user = req.body;
+
+        if (!user.email) {
+          return res.status(400).json({
+            success: false,
+            message: "Email is required",
+          });
+        }
+
+        const existingUser = await usersCollection.findOne({
+          email: user.email,
+        });
+
+        if (existingUser) {
+          return res.status(200).json({
+            success: true,
+            message: "User already exists",
+            user: existingUser,
+          });
+        }
+
+        const newUser = {
+          name: user.name || "",
+          email: user.email,
+          image: user.image || "",
+          role: user.role || "client",
+          createdAt: new Date(),
+        };
+
+        const result = await usersCollection.insertOne(newUser);
+
+        res.status(201).json({
+          success: true,
+          insertedId: result.insertedId,
+          user: newUser,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // =====================================================
+    // GET ALL USERS
+    // =====================================================
+
+    app.get("/users", async (req, res) => {
+      try {
+        const users = await usersCollection
+          .find()
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
+
+        res.send(users);
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // =====================================================
+    // CHECK USER EXISTS
+    // =====================================================
+
+    app.get("/users/email/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const user = await usersCollection.findOne({
+          email,
+        });
+
+        res.send({
+          success: true,
+          exists: !!user,
+          user,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // =====================================================
+    // GET USER BY EMAIL
+    // =====================================================
+
+    app.get("/users/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const user = await usersCollection.findOne({
+          email,
+        });
+
+        res.send(user);
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // =====================================================
+    // UPDATE USER ROLE
+    // =====================================================
+
+    app.patch("/users/role/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const { role } = req.body;
+
+        if (role !== "client" && role !== "lawyer") {
+          return res.status(400).json({
+            success: false,
+            message: "Role must be client or lawyer",
+          });
+        }
+
+        const result = await usersCollection.updateOne(
+          {
+            _id: new ObjectId(id),
+          },
+          {
+            $set: {
+              role,
+            },
+          },
+        );
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // =====================================================
+    // DELETE USER
+    // =====================================================
+
+    app.delete("/users/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const result = await usersCollection.deleteOne({
+          _id: new ObjectId(id),
+        });
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // =====================================================
+    // PING TEST
+    // =====================================================
+
+    await client.db("admin").command({
+      ping: 1,
+    });
+
+    console.log("✅ Successfully connected to MongoDB!");
+  } catch (error) {
+    console.error(error);
   }
 }
 
-run().catch(console.dir);
+run();
 
-// DEFAULT ROUTE
+// ======================
+// ROOT ROUTE
+// ======================
+
 app.get("/", (req, res) => {
-  res.send("🚀 Legal-Ease Server is running fine!");
+  res.send("🚀 LegalEase Server Running Successfully!");
 });
 
+// ======================
 // START SERVER
+// ======================
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
