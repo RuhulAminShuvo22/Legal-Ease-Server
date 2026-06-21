@@ -47,6 +47,7 @@ async function run() {
     const db = client.db("legalease");
 
     const usersCollection = db.collection("users");
+    const lawyersCollection = db.collection("lawyers");
 
     // =====================================================
     // CREATE USER
@@ -142,7 +143,6 @@ async function run() {
     });
 
     // GET USER BY EMAIL
-
     app.get("/users/:email", async (req, res) => {
       try {
         const email = req.params.email;
@@ -161,7 +161,6 @@ async function run() {
     });
 
     // UPDATE USER ROLE
-
     app.patch("/users/role/:id", async (req, res) => {
       try {
         const id = req.params.id;
@@ -252,6 +251,122 @@ async function run() {
         });
       }
     });
+
+    // =====================================================
+    // LAWYER ROUTES
+    // =====================================================
+
+    // GET ALL LAWYERS
+
+    app.get("/lawyers", async (req, res) => {
+      try {
+        const lawyers = await lawyersCollection.find().toArray();
+
+        res.send(lawyers);
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch lawyers",
+        });
+      }
+    });
+
+    // // GET SINGLE LAWYER
+
+    // app.get("/lawyers/:id", async (req, res) => {
+    //   try {
+    //     const { id } = req.params;
+
+    //     const lawyer = await lawyersCollection.findOne({
+    //       _id: new ObjectId(id),
+    //     });
+
+    //     if (!lawyer) {
+    //       return res.status(404).json({
+    //         success: false,
+    //         message: "Lawyer not found",
+    //       });
+    //     }
+
+    //     res.send(lawyer);
+    //   } catch (error) {
+    //     res.status(500).json({
+    //       success: false,
+    //       message: "Lawyer not found",
+    //     });
+    //   }
+    // });
+
+    // // ADD LAWYER
+
+    // app.post("/lawyers", async (req, res) => {
+    //   try {
+    //     const lawyer = req.body;
+
+    //     const result = await lawyersCollection.insertOne(lawyer);
+
+    //     res.status(201).json({
+    //       success: true,
+    //       insertedId: result.insertedId,
+    //     });
+    //   } catch (error) {
+    //     res.status(500).json({
+    //       success: false,
+    //       message: "Failed to add lawyer",
+    //     });
+    //   }
+    // });
+
+    // // UPDATE LAWYER
+
+    // app.put("/lawyers/:id", async (req, res) => {
+    //   try {
+    //     const { id } = req.params;
+
+    //     const updatedLawyer = req.body;
+
+    //     const result = await lawyersCollection.updateOne(
+    //       {
+    //         _id: new ObjectId(id),
+    //       },
+    //       {
+    //         $set: updatedLawyer,
+    //       },
+    //     );
+
+    //     res.send({
+    //       success: true,
+    //       result,
+    //     });
+    //   } catch (error) {
+    //     res.status(500).json({
+    //       success: false,
+    //       message: "Update failed",
+    //     });
+    //   }
+    // });
+
+    // // DELETE LAWYER
+
+    // app.delete("/lawyers/:id", async (req, res) => {
+    //   try {
+    //     const { id } = req.params;
+
+    //     const result = await lawyersCollection.deleteOne({
+    //       _id: new ObjectId(id),
+    //     });
+
+    //     res.send({
+    //       success: true,
+    //       result,
+    //     });
+    //   } catch (error) {
+    //     res.status(500).json({
+    //       success: false,
+    //       message: "Delete failed",
+    //     });
+    //   }
+    // });
 
     // PING TEST
 
