@@ -355,7 +355,7 @@ async function run() {
       }
     });
 
-    // DELETE LAWYER
+    // DELETE LAWYER//
 
     app.delete("/lawyers/:id", async (req, res) => {
       try {
