@@ -317,34 +317,34 @@ async function run() {
       }
     });
 
-    // // UPDATE LAWYER
+    // UPDATE LAWYER
 
-    // app.put("/lawyers/:id", async (req, res) => {
-    //   try {
-    //     const { id } = req.params;
+    app.put("/lawyers/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
 
-    //     const updatedLawyer = req.body;
+        const updatedLawyer = req.body;
 
-    //     const result = await lawyersCollection.updateOne(
-    //       {
-    //         _id: new ObjectId(id),
-    //       },
-    //       {
-    //         $set: updatedLawyer,
-    //       },
-    //     );
+        const result = await lawyersCollection.updateOne(
+          {
+            _id: new ObjectId(id),
+          },
+          {
+            $set: updatedLawyer,
+          },
+        );
 
-    //     res.send({
-    //       success: true,
-    //       result,
-    //     });
-    //   } catch (error) {
-    //     res.status(500).json({
-    //       success: false,
-    //       message: "Update failed",
-    //     });
-    //   }
-    // });
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "Update failed",
+        });
+      }
+    });
 
     // // DELETE LAWYER
 
