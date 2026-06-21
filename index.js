@@ -271,31 +271,31 @@ async function run() {
       }
     });
 
-    // // GET SINGLE LAWYER
+    // GET SINGLE LAWYER
 
-    // app.get("/lawyers/:id", async (req, res) => {
-    //   try {
-    //     const { id } = req.params;
+    app.get("/lawyers/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
 
-    //     const lawyer = await lawyersCollection.findOne({
-    //       _id: new ObjectId(id),
-    //     });
+        const lawyer = await lawyersCollection.findOne({
+          _id: new ObjectId(id),
+        });
 
-    //     if (!lawyer) {
-    //       return res.status(404).json({
-    //         success: false,
-    //         message: "Lawyer not found",
-    //       });
-    //     }
+        if (!lawyer) {
+          return res.status(404).json({
+            success: false,
+            message: "Lawyer not found",
+          });
+        }
 
-    //     res.send(lawyer);
-    //   } catch (error) {
-    //     res.status(500).json({
-    //       success: false,
-    //       message: "Lawyer not found",
-    //     });
-    //   }
-    // });
+        res.send(lawyer);
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "Lawyer not found",
+        });
+      }
+    });
 
     // // ADD LAWYER
 
