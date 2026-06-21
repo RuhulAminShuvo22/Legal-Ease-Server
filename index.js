@@ -255,6 +255,15 @@ async function run() {
     // =====================================================
     // LAWYER ROUTES
     // =====================================================
+    app.get("/lawyers/email/:email", async (req, res) => {
+      const email = req.params.email;
+
+      const result = await lawyersCollection.findOne({
+        lawyerEmail: email,
+      });
+
+      res.send(result);
+    });
 
     // GET ALL LAWYERS
 
