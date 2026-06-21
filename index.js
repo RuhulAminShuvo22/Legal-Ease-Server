@@ -297,25 +297,25 @@ async function run() {
       }
     });
 
-    // // ADD LAWYER
+    // ADD LAWYER
 
-    // app.post("/lawyers", async (req, res) => {
-    //   try {
-    //     const lawyer = req.body;
+    app.post("/lawyers", async (req, res) => {
+      try {
+        const lawyer = req.body;
 
-    //     const result = await lawyersCollection.insertOne(lawyer);
+        const result = await lawyersCollection.insertOne(lawyer);
 
-    //     res.status(201).json({
-    //       success: true,
-    //       insertedId: result.insertedId,
-    //     });
-    //   } catch (error) {
-    //     res.status(500).json({
-    //       success: false,
-    //       message: "Failed to add lawyer",
-    //     });
-    //   }
-    // });
+        res.status(201).json({
+          success: true,
+          insertedId: result.insertedId,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "Failed to add lawyer",
+        });
+      }
+    });
 
     // // UPDATE LAWYER
 
