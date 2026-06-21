@@ -346,27 +346,27 @@ async function run() {
       }
     });
 
-    // // DELETE LAWYER
+    // DELETE LAWYER
 
-    // app.delete("/lawyers/:id", async (req, res) => {
-    //   try {
-    //     const { id } = req.params;
+    app.delete("/lawyers/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
 
-    //     const result = await lawyersCollection.deleteOne({
-    //       _id: new ObjectId(id),
-    //     });
+        const result = await lawyersCollection.deleteOne({
+          _id: new ObjectId(id),
+        });
 
-    //     res.send({
-    //       success: true,
-    //       result,
-    //     });
-    //   } catch (error) {
-    //     res.status(500).json({
-    //       success: false,
-    //       message: "Delete failed",
-    //     });
-    //   }
-    // });
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "Delete failed",
+        });
+      }
+    });
 
     // PING TEST
 
