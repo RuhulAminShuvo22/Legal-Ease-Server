@@ -493,6 +493,36 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // REJECT REQUEST
+    // ===========================
+
+    app.patch("/hirings/reject/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const result = await hiringsCollection.updateOne(
+          {
+            _id: new ObjectId(id),
+          },
+          {
+            $set: {
+              status: "rejected",
+            },
+          },
+        );
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
