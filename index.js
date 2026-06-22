@@ -161,7 +161,6 @@ async function run() {
     });
 
     // UPDATE USER ROLE
-    // UPDATE USER ROLE
     app.patch("/users/role/:id", async (req, res) => {
       try {
         const id = req.params.id;
@@ -378,6 +377,16 @@ async function run() {
           message: "Delete failed",
         });
       }
+    });
+    //latest 6 lawyers
+    app.get("/lawyers/latest", async (req, res) => {
+      const lawyers = await lawyersCollection
+        .find()
+        .sort({ _id: -1 })
+        .limit(6)
+        .toArray();
+
+      res.send(lawyers);
     });
 
     // PING TEST
