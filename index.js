@@ -550,7 +550,26 @@ async function run() {
     // ===========================
     // CREATE STRIPE PAYMENT INTENT
     // ===========================
-    
+    app.post("/create-payment-intent", async (req, res) => {
+      try {
+        const { fee } = req.body;
+
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: fee * 100,
+          currency: "usd",
+          payment_method_types: ["card"],
+        });
+
+        res.send({
+          clientSecret: paymentIntent.client_secret,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // ===========================
     // PAYMENT SUCCESS
