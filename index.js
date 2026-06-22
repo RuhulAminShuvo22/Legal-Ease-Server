@@ -438,6 +438,31 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // LAWYER REQUESTS
+    // ===========================
+
+    app.get("/hirings/lawyer/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const result = await hiringsCollection
+          .find({
+            lawyerEmail: email,
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
