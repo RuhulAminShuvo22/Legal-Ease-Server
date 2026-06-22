@@ -389,6 +389,30 @@ async function run() {
 
       res.send(lawyers);
     });
+    // ===========================
+    // CREATE HIRING REQUEST
+    // ===========================
+
+    app.post("/hirings", async (req, res) => {
+      try {
+        const hiring = req.body;
+
+        const result = await hiringsCollection.insertOne({
+          ...hiring,
+          createdAt: new Date(),
+        });
+
+        res.send({
+          success: true,
+          insertedId: result.insertedId,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
