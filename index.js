@@ -413,6 +413,31 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // CLIENT HIRING HISTORY
+    // ===========================
+
+    app.get("/hirings/client/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const result = await hiringsCollection
+          .find({
+            clientEmail: email,
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
