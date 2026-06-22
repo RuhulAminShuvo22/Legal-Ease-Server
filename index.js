@@ -543,6 +543,36 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // PAYMENT SUCCESS
+    // ===========================
+
+    app.patch("/hirings/payment/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const result = await hiringsCollection.updateOne(
+          {
+            _id: new ObjectId(id),
+          },
+          {
+            $set: {
+              paymentStatus: "paid",
+            },
+          },
+        );
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
