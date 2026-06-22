@@ -622,7 +622,7 @@ app.get("/", (req, res) => {
   res.send("🚀 LegalEase Server Running Successfully!");
 });
 
-// START SERVER//
+// START SERVER
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
