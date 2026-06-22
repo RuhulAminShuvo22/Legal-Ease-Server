@@ -48,6 +48,7 @@ async function run() {
 
     const usersCollection = db.collection("users");
     const lawyersCollection = db.collection("lawyers");
+    const hiringsCollection = db.collection("hirings");
 
     // =====================================================
     // CREATE USER
