@@ -161,16 +161,19 @@ async function run() {
     });
 
     // UPDATE USER ROLE
+    // UPDATE USER ROLE
     app.patch("/users/role/:id", async (req, res) => {
       try {
         const id = req.params.id;
 
         const { role } = req.body;
 
-        if (role !== "client" && role !== "lawyer") {
+        const validRoles = ["client", "lawyer", "admin"];
+
+        if (!validRoles.includes(role)) {
           return res.status(400).json({
             success: false,
-            message: "Role must be client or lawyer",
+            message: "Invalid role",
           });
         }
 
