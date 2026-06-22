@@ -523,6 +523,26 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // GET SINGLE HIRING
+    // ===========================
+
+    app.get("/hirings/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const result = await hiringsCollection.findOne({
+          _id: new ObjectId(id),
+        });
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
