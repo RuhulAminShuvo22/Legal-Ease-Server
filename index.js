@@ -924,6 +924,31 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // LAWYER REVIEWS BY LAWYER ID
+    // ===========================
+
+    app.get("/reviews/lawyer-id/:id", async (req, res) => {
+      try {
+        const lawyerId = req.params.id;
+
+        const result = await reviewsCollection
+          .find({
+            lawyerId,
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
     // PING TEST
 
     await client.db("admin").command({
