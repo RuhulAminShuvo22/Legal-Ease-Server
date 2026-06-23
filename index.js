@@ -868,6 +868,29 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // DELETE REVIEW
+    // ===========================
+
+    app.delete("/reviews/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const result = await reviewsCollection.deleteOne({
+          _id: new ObjectId(id),
+        });
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
     // PING TEST
 
     await client.db("admin").command({
