@@ -52,6 +52,7 @@ async function run() {
     const usersCollection = db.collection("users");
     const lawyersCollection = db.collection("lawyers");
     const hiringsCollection = db.collection("hirings");
+    const consultationsCollection = db.collection("consultations");
 
     // =====================================================
     // CREATE USER
@@ -593,6 +594,32 @@ async function run() {
         res.send({
           success: true,
           result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // ===========================
+    // CREATE CONSULTATION
+    // ===========================
+
+    app.post("/consultations", async (req, res) => {
+      try {
+        const consultation = req.body;
+
+        const result = await consultationsCollection.insertOne({
+          ...consultation,
+          status: "scheduled",
+          createdAt: new Date(),
+        });
+
+        res.send({
+          success: true,
+          insertedId: result.insertedId,
         });
       } catch (error) {
         res.status(500).send({
