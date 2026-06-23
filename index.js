@@ -547,6 +547,30 @@ async function run() {
         });
       }
     });
+    // CHECK CONSULTATION ELIGIBILITY
+    app.get("/hirings/check/:lawyerId/:clientEmail", async (req, res) => {
+      try {
+        const { lawyerId, clientEmail } = req.params;
+
+        const hiring = await hiringsCollection.findOne({
+          lawyerId,
+          clientEmail,
+          status: "accepted",
+          paymentStatus: "paid",
+        });
+
+        res.send({
+          success: true,
+          exists: !!hiring,
+          hiring,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // ===========================
     // CREATE STRIPE PAYMENT INTENT
