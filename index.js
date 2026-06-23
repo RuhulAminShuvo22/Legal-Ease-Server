@@ -652,24 +652,24 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // CLIENT CONSULTATIONS
+    // ===========================
 
-    // CHECK CONSULTATION ELIGIBILITY
-    app.get("/hirings/check/:lawyerId/:clientEmail", async (req, res) => {
+    app.get("/consultations/client/:email", async (req, res) => {
       try {
-        const { lawyerId, clientEmail } = req.params;
+        const email = req.params.email;
 
-        const hiring = await hiringsCollection.findOne({
-          lawyerId,
-          clientEmail,
-          status: "accepted",
-          paymentStatus: "paid",
-        });
+        const result = await consultationsCollection
+          .find({
+            clientEmail: email,
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
 
-        res.send({
-          success: true,
-          exists: !!hiring,
-          hiring,
-        });
+        res.send(result);
       } catch (error) {
         res.status(500).send({
           success: false,
