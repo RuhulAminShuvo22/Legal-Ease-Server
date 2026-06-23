@@ -53,6 +53,7 @@ async function run() {
     const lawyersCollection = db.collection("lawyers");
     const hiringsCollection = db.collection("hirings");
     const consultationsCollection = db.collection("consultations");
+    const reviewsCollection = db.collection("reviews");
 
     // =====================================================
     // CREATE USER
