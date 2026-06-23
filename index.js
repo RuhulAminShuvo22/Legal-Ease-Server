@@ -848,6 +848,26 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // SINGLE REVIEW
+    // ===========================
+
+    app.get("/reviews/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const result = await reviewsCollection.findOne({
+          _id: new ObjectId(id),
+        });
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
     // PING TEST
 
     await client.db("admin").command({
