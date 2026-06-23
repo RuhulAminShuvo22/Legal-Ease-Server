@@ -722,27 +722,56 @@ async function run() {
         });
       }
     });
-    // ===========================
-    //Completed CONSULTATION
-    // ===========================
+    // COMPLETE CONSULTATION
     app.patch("/consultations/complete/:id", async (req, res) => {
-      const { id } = req.params;
-
-      const result = await consultationsCollection.updateOne(
-        {
-          _id: new ObjectId(id),
-        },
-        {
-          $set: {
-            status: "completed",
+      try {
+        const result = await consultationsCollection.updateOne(
+          {
+            _id: new ObjectId(req.params.id),
           },
-        },
-      );
+          {
+            $set: {
+              status: "completed",
+            },
+          },
+        );
 
-      res.send({
-        success: true,
-        result,
-      });
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    // CANCEL CONSULTATION
+    app.patch("/consultations/cancel/:id", async (req, res) => {
+      try {
+        const result = await consultationsCollection.updateOne(
+          {
+            _id: new ObjectId(req.params.id),
+          },
+          {
+            $set: {
+              status: "cancelled",
+            },
+          },
+        );
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
     });
 
     // PING TEST
