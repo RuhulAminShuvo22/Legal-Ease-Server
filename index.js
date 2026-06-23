@@ -949,7 +949,7 @@ async function run() {
         });
       }
     });
-    // PING TEST
+    // PING TEST//
 
     await client.db("admin").command({
       ping: 1,
