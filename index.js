@@ -547,7 +547,7 @@ async function run() {
         });
       }
     });
-    // CHECK CONSULTATION ELIGIBILITY
+    // CHECK CONSULTATION ELIGIBILITY//
     app.get("/hirings/check/:lawyerId/:clientEmail", async (req, res) => {
       try {
         const { lawyerId, clientEmail } = req.params;
