@@ -891,6 +891,39 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // UPDATE REVIEW
+    // ===========================
+
+    app.patch("/reviews/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const { rating, comment } = req.body;
+
+        const result = await reviewsCollection.updateOne(
+          {
+            _id: new ObjectId(id),
+          },
+          {
+            $set: {
+              rating,
+              comment,
+            },
+          },
+        );
+
+        res.send({
+          success: true,
+          result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
     // PING TEST
 
     await client.db("admin").command({
