@@ -823,7 +823,31 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // LAWYER REVIEWS
+    // ===========================
 
+    app.get("/reviews/lawyer/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const result = await reviewsCollection
+          .find({
+            lawyerEmail: email,
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
     // PING TEST
 
     await client.db("admin").command({
