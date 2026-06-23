@@ -677,6 +677,31 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // LAWYER CONSULTATIONS
+    // ===========================
+
+    app.get("/consultations/lawyer/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const result = await consultationsCollection
+          .find({
+            lawyerEmail: email,
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
