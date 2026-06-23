@@ -702,6 +702,26 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // SINGLE CONSULTATION
+    // ===========================
+
+    app.get("/consultations/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const result = await consultationsCollection.findOne({
+          _id: new ObjectId(id),
+        });
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
