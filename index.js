@@ -774,6 +774,30 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // CREATE REVIEW
+    // ===========================
+
+    app.post("/reviews", async (req, res) => {
+      try {
+        const review = req.body;
+
+        const result = await reviewsCollection.insertOne({
+          ...review,
+          createdAt: new Date(),
+        });
+
+        res.send({
+          success: true,
+          insertedId: result.insertedId,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST
 
