@@ -722,6 +722,28 @@ async function run() {
         });
       }
     });
+    // ===========================
+    //Completed CONSULTATION
+    // ===========================
+    app.patch("/consultations/complete/:id", async (req, res) => {
+      const { id } = req.params;
+
+      const result = await consultationsCollection.updateOne(
+        {
+          _id: new ObjectId(id),
+        },
+        {
+          $set: {
+            status: "completed",
+          },
+        },
+      );
+
+      res.send({
+        success: true,
+        result,
+      });
+    });
 
     // PING TEST
 
