@@ -1026,6 +1026,40 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // LAWYER EARNINGS
+    // ===========================
+
+    app.get("/earnings/lawyer/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const hirings = await hiringsCollection
+          .find({
+            lawyerEmail: email,
+            paymentStatus: "paid",
+          })
+          .toArray();
+
+        const totalEarnings = hirings.reduce(
+          (sum, item) => sum + Number(item.fee || 0),
+          0,
+        );
+
+        const totalCases = hirings.length;
+
+        res.send({
+          totalEarnings,
+          totalCases,
+          hirings,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
     // PING TEST//
 
     await client.db("admin").command({
