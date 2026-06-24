@@ -999,6 +999,33 @@ async function run() {
         });
       }
     });
+    // ===========================
+    // LAWYER CLIENTS
+    // ===========================
+
+    app.get("/clients/lawyer/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const clients = await hiringsCollection
+          .find({
+            lawyerEmail: email,
+            status: "accepted",
+            paymentStatus: "paid",
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
+
+        res.send(clients);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
     // PING TEST//
 
     await client.db("admin").command({
