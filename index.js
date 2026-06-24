@@ -1028,8 +1028,6 @@ async function run() {
     });
     // ===========================
     // LAWYER EARNINGS
-    // ===========================
-
     app.get("/earnings/lawyer/:email", async (req, res) => {
       try {
         const email = req.params.email;
