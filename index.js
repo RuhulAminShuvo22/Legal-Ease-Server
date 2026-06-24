@@ -1058,6 +1058,42 @@ async function run() {
         });
       }
     });
+    //======================
+    // Admin analysis api
+    //======================
+    app.get("/admin/analytics", async (req, res) => {
+      try {
+        const totalUsers = await usersCollection.countDocuments();
+
+        const totalLawyers = await lawyersCollection.countDocuments();
+
+        const totalHires = await hiringsCollection.countDocuments();
+
+        const paidHirings = await hiringsCollection
+          .find({
+            paymentStatus: "paid",
+          })
+          .toArray();
+
+        const totalRevenue = paidHirings.reduce(
+          (sum, item) => sum + Number(item.fee || 0),
+          0,
+        );
+
+        res.send({
+          totalUsers,
+          totalLawyers,
+          totalHires,
+          totalRevenue,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
     // PING TEST//
 
     await client.db("admin").command({
