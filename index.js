@@ -1093,6 +1093,28 @@ async function run() {
         });
       }
     });
+    //=================
+    //Transactions API
+    //=================
+    app.get("/admin/transactions", async (req, res) => {
+      try {
+        const transactions = await hiringsCollection
+          .find({
+            paymentStatus: "paid",
+          })
+          .sort({
+            createdAt: -1,
+          })
+          .toArray();
+
+        res.send(transactions);
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
 
     // PING TEST//
 
