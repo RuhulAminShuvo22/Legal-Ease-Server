@@ -949,6 +949,56 @@ async function run() {
         });
       }
     });
+    app.get("/lawyer-dashboard/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+
+        const consultations = await consultationsCollection
+          .find({
+            lawyerEmail: email,
+          })
+          .toArray();
+
+        const reviews = await reviewsCollection
+          .find({
+            lawyerEmail: email,
+          })
+          .toArray();
+
+        const hirings = await hiringsCollection
+          .find({
+            lawyerEmail: email,
+            status: "accepted",
+          })
+          .toArray();
+
+        const totalClients = new Set(consultations.map((c) => c.clientEmail))
+          .size;
+
+        const totalConsultations = consultations.length;
+
+        const totalReviews = reviews.length;
+
+        const totalEarnings = hirings.reduce(
+          (sum, item) => sum + Number(item.fee || 0),
+          0,
+        );
+
+        res.send({
+          totalClients,
+          totalConsultations,
+          totalReviews,
+          totalEarnings,
+          recentConsultations: consultations.slice(0, 5),
+          recentReviews: reviews.slice(0, 5),
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
     // PING TEST//
 
     await client.db("admin").command({
