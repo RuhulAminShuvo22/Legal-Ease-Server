@@ -14,7 +14,7 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// MIDDLEWARE
+// MIDDLEWARE//
 
 app.use(
   cors({
