@@ -18,7 +18,10 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      process.env.CLIENT_URL,
+      process.env.CLIENT_URL_PROD,
+    ].filter(Boolean),
     credentials: true,
   }),
 );
@@ -289,6 +292,15 @@ async function run() {
     });
 
     // GET SINGLE LAWYER
+    app.get("/lawyers/latest", async (req, res) => {
+      const lawyers = await lawyersCollection
+        .find()
+        .sort({ _id: -1 })
+        .limit(6)
+        .toArray();
+
+      res.send(lawyers);
+    });
 
     app.get("/lawyers/:id", async (req, res) => {
       try {
@@ -385,15 +397,7 @@ async function run() {
       }
     });
     //latest 6 lawyers
-    app.get("/lawyers/latest", async (req, res) => {
-      const lawyers = await lawyersCollection
-        .find()
-        .sort({ _id: -1 })
-        .limit(6)
-        .toArray();
 
-      res.send(lawyers);
-    });
     // ===========================
     // CREATE HIRING REQUEST
     // ===========================
@@ -1028,6 +1032,7 @@ async function run() {
     });
     // ===========================
     // LAWYER EARNINGS
+    //============================
     app.get("/earnings/lawyer/:email", async (req, res) => {
       try {
         const email = req.params.email;
